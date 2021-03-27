@@ -7,6 +7,7 @@ import news from '@/page/news'
 import goods from '../page/goods/goods'
 import list from '@/page/goods/list'
 import add from '@/page/goods/add'
+import edit from '@/page/goods/edit'
 import fileupload from '../page/goods/fileUpload'
 
 Vue.use(Router)
@@ -39,6 +40,10 @@ export default new Router({
         {
           path:'add',
           component:add
+        },
+        {
+          path:'edit/:id',
+          component:edit
         },
         {
           path:'fileupload',

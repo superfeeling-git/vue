@@ -28,6 +28,7 @@
             <tr>
                 <td>发布时间</td>
                 <td>
+                    {{$route.params.id}}
                     <input v-model="addTime" size="40"/>                    
                 </td>
             </tr>
@@ -82,7 +83,7 @@ export default {
         }
     },
     mounted() {
-        console.log(process.env.NODE_ENV);
+        console.log(this.$route.params.id);
     },
 }
 </script>

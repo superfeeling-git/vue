@@ -25,8 +25,8 @@
                 <td>
                     {{item.addTime}}
                 </td>
-                <td>
-                    <router-link to="edit/:id">修改</router-link>
+                <td>                    
+                    <a href="javascript:void(0)" @click="$router.push('edit/' + item.goodsId)">删除</a>
                 </td>
             </tr>
         </table>
@@ -41,15 +41,18 @@ export default {
             info:null
         }
     },
+    methods: {
+        redirect:function(e){
+            console.log(3);
+            this.$router.push({ path: 'edit/3' })
+        }
+    },
     mounted() {
         axios
       .get('https://localhost:44303/api/Goods/GetAll')
       .then(response => {
-          this.info = response.data;
-          
-          });
-
-
+          this.info = response.data;          
+        });
     },
 }
 </script>
