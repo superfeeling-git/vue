@@ -7,6 +7,7 @@
                 <td>商品名称</td>
                 <td>商品价格</td>
                 <td>发布时间</td>
+                <td>修改</td>
             </tr>
             <tr v-for="item in info" :key="item.goodsId">
                 <td>
@@ -23,6 +24,9 @@
                 </td>
                 <td>
                     {{item.addTime}}
+                </td>
+                <td>
+                    <router-link to="edit/:id">修改</router-link>
                 </td>
             </tr>
         </table>
