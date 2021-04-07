@@ -68,7 +68,7 @@ export default {
                 };
 
             //axios.post("https://localhost:44303/api/Goods/Create",formData);
-            axios.defaults.baseURL = 'https://localhost:44303';
+            axios.defaults.baseURL = 'http://api.a.com:63846';
             axios({
                 url:'/api/Goods/Create',
                 method:'post',

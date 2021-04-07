@@ -420,7 +420,7 @@
 			}
 		}
 		span{
-			.sc(14px, #999);
+			
 			transition: all 400ms;
 		}
 		.edit_icon{

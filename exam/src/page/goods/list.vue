@@ -49,7 +49,7 @@ export default {
     },
     mounted() {
         axios
-      .get('https://localhost:44303/api/Goods/GetAll')
+      .get('http://api.a.com:63846/api/Goods/GetAll')
       .then(response => {
           this.info = response.data;          
         });

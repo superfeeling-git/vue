@@ -17,10 +17,10 @@
                     <el-input v-model="ruleForm.type"></el-input>
                   </el-col>
                   <el-col :span="1">
-&nbsp;
+                    &nbsp;
                   </el-col>
                   <el-col :span="8">
-                    <img src="https://localhost:44365/Admin/Account/GenerCode" height="30">
+                    <img src="http://api.a.com:63846/api/Account/GenerCode" height="30">
                   </el-col>
                 </el-form-item>
                 <el-form-item>
@@ -50,6 +50,7 @@ img{
 </style>
 
 <script>
+import axios from 'axios';
   export default {
     data() {
 
@@ -70,10 +71,8 @@ img{
     },
     methods: {
       submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          console.log(valid);
+        this.$refs[formName].validate((valid) => {    
           if (valid) {
-            alert('submit!');
           } else {
             console.log('error submit!!');
             return false;
@@ -83,6 +82,21 @@ img{
       resetForm(formName) {
         this.$refs[formName].resetFields();
       }
+    },
+    mounted() {
+      //如果需要跨域访问Cookies，设置此项
+      axios.defaults.withCredentials=true;
+      axios.defaults.baseURL = 'http://api.a.com:63846';
+      axios({
+      url:'/api/Account/Login',
+      method:'get',
+      //responseType:'json',
+      //data:formData
+      }).then(function(response){
+          console.log(response.data);
+      }).catch(function(error){
+          console.log(error);
+      });
     },
   }
 </script>
