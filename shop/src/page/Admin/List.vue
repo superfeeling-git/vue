@@ -1,5 +1,5 @@
 <template>
     <div>
-        默认首页
+        管理员列表
     </div>
 </template>

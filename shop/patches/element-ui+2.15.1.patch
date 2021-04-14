@@ -1,0 +1,11 @@
+diff --git a/node_modules/element-ui/packages/menu/src/menu-item.vue b/node_modules/element-ui/packages/menu/src/menu-item.vue
+index e53ec87..5464f67 100644
+--- a/node_modules/element-ui/packages/menu/src/menu-item.vue
++++ b/node_modules/element-ui/packages/menu/src/menu-item.vue
+@@ -1,5 +1,5 @@
+ <template>
+-  <li class="el-menu-item"
++  <li
+     role="menuitem"
+     tabindex="-1"
+     :style="[paddingStyle, itemStyle, { backgroundColor }]"
