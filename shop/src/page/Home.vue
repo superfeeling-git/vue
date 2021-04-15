@@ -45,7 +45,8 @@
                         :label="item.title"
                         :name="item.name"
                     >
-                    <component :is="item.content" :key="new Date().getTime()"></component>
+                    <!--customerClick自定义事件接收子组件事件，并执行test方法-->
+                    <component :is="item.content" :key="new Date().getTime()" @customerClick="test"></component>
                     </el-tab-pane>
                     </el-tabs>                    
                 </el-main>
@@ -198,11 +199,15 @@ export default {
         Default,GoodsCreate,GoodsList,AdminCreate,AdminList,RoleCreate,RoleList
     },
     methods: {
+        test(name,rowData){
+            let index = this.editableTabs.findIndex(v=>v.name==name);
+            this.editableTabs[index].content = GoodsCreate;
+        },
         handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+            console.log(key, keyPath);
         },
         handleClose(key, keyPath) {
-        console.log(key, keyPath);
+            console.log(key, keyPath);
         },
         addTab(targetName) {
             //要添加的Tab的URL路径:Goods/Create
@@ -229,21 +234,21 @@ export default {
         },
         removeTab(targetName) {
             console.log(targetName);
-        let tabs = this.editableTabs;
-        let activeName = this.editableTabsValue;
-        if (activeName === targetName) {
-            tabs.forEach((tab, index) => {
-            if (tab.name === targetName) {
-                let nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                activeName = nextTab.name;
+            let tabs = this.editableTabs;
+            let activeName = this.editableTabsValue;
+            if (activeName === targetName) {
+                tabs.forEach((tab, index) => {
+                if (tab.name === targetName) {
+                    let nextTab = tabs[index + 1] || tabs[index - 1];
+                    if (nextTab) {
+                    activeName = nextTab.name;
+                    }
                 }
+                });
             }
-            });
-        }
-        
-        this.editableTabsValue = activeName;
-        this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+            
+            this.editableTabsValue = activeName;
+            this.editableTabs = tabs.filter(tab => tab.name !== targetName);
         }
     }
 }

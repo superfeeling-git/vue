@@ -11,3 +11,6 @@ export let GoodsCreate = (data) => request("Goods/Create" , data , "Post");
 
 //商品列表
 export const GoodsAll = () => request("Goods/GetAll");
+
+//商品分页显示
+export const GoodsPage = (data) => request("Goods/GetPage" ,{}, data);

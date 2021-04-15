@@ -1,7 +1,7 @@
 import axios from 'axios';
 import baseUrl from './evns';
 
-export default async(url = '', data = {}, type = 'GET') => {
+export default async(url = '', data = {}, params = {}, type = 'GET') => {
 
     // 创建一个axios实例
     const instance = axios.create({
@@ -72,8 +72,9 @@ export default async(url = '', data = {}, type = 'GET') => {
     })
 
     return await instance.request({
+        params:params,
         url:url,
-        data:data,
+        data:{pageindex:2},
         method:type
     });
 }
