@@ -161,10 +161,6 @@ import wangEditor from 'wangeditor'
       // 创建编辑器
       editor.create()
       this.config.editor = editor
-
-      GoodsAll().then(d=>{
-        console.log(d);
-      });
     },
     beforeDestroy() {
       // 调用销毁 API 对当前编辑器实例进行销毁
