@@ -45,7 +45,7 @@
                         :label="item.title"
                         :name="item.name"
                     >
-                    <component :is="item.content"></component>
+                    <component :is="item.content" :key="new Date().getTime()"></component>
                     </el-tab-pane>
                     </el-tabs>                    
                 </el-main>

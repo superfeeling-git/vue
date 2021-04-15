@@ -32,7 +32,7 @@ export default async(url = '', data = {}, type = 'GET') => {
                 data:{
                     Token:localStorage.getItem("token")
                 }
-            })
+                })
                 .then(res => {
 
                     if(res.data.status > 0){
@@ -60,11 +60,11 @@ export default async(url = '', data = {}, type = 'GET') => {
                         return instance(config)
                     }
                 
-            }).catch(res => {
+                }).catch(res => {
                 console.error('refreshtoken error =>', res)
 
                 //刷新token失败，神仙也救不了了，跳转到首页重新登录吧
-                window.location.href = '/'
+                //window.location.href = '/'
             })
         }
 

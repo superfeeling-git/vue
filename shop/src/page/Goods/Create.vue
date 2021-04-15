@@ -4,8 +4,8 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="180px">
                 <el-form-item label="商品分类">
                     <el-cascader
-                        v-model="form.value"
-                        :options="form.options"
+                        :value="form.categoryId"
+                        :options="config.options"
                         placeholder="做为一级分类"
                         @change="handleChange">
                     </el-cascader>
@@ -22,19 +22,21 @@
                 <el-form-item label="图片上传">
                   <el-upload
                     class="avatar-uploader"
-                    :action="form.actions"
+                    :action="config.actions"
                     :show-file-list="false"
                     :on-success="handleAvatarSuccess"
                     name="formFile"
                     :before-upload="beforeAvatarUpload">
-                    <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
+                    <img v-if="config.imageUrl" :src="config.imageUrl" class="avatar">
                     <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                   </el-upload>
                 </el-form-item>
-
+                <el-form-item label="商品介绍">
+                  <div id="Content"></div>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
-                    <el-button>取消</el-button>
+                    <el-button @click="resetForm('form')">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-col>
@@ -74,21 +76,26 @@
 
 <script>
 import baseUrl from '../../util/evns'
-import {GetAllCategory} from '../../util/apis'
+import {GetAllCategory,GoodsCreate,GoodsAll} from '../../util/apis'
+import wangEditor from 'wangeditor'
 
   export default {
     data() {
       return {
         form: {
-          categoryId: '',
-          goodsId: '',
+          categoryId: 0,
+          goodsId: 0,
           goodsName: '',
           goodsPrice: 1,
-          addTime: '',
-          value:[],
-          options: [],
+          addTime: '',       
+          goodsPic:"",
+          Content:""
+        },
+        config:{
           imageUrl:"",
-          actions:`${baseUrl.baseUrl}Goods/UploadFile`
+          options: [],
+          actions:`${baseUrl.baseUrl}Goods/UploadFile`,
+          editor: null
         },
         rules:{
             goodsName: [
@@ -102,18 +109,34 @@ import {GetAllCategory} from '../../util/apis'
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.form.Content=this.config.editor.txt.html();
+            GoodsCreate(this.form).then(d=>{
+              if(d.data >= 1){
+                this.$refs[formName].resetFields();
+                this.$message({
+                  message: '添加商品成功',
+                  type: 'success'
+                });
+              }
+            });
           } else {
             console.log('error submit!!');
             return false;
           }
         });
       },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.config.imageUrl = null;
+        this.config.editor.txt.clear();
+        this.form = this.$options.data().form // 重置data中的 某个form表单
+      },
       handleChange(value) {
-        console.log(value);
+        this.form.categoryId = value.slice(-1)[0];
       },
       handleAvatarSuccess(res, file, fileList) {
-        this.form.imageUrl = URL.createObjectURL(file.raw);
+        this.form.goodsPic = res.file;
+        this.config.imageUrl = URL.createObjectURL(file.raw);
       },
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg';
@@ -127,10 +150,26 @@ import {GetAllCategory} from '../../util/apis'
         }
         return isJPG && isLt2M;
       }
-    },mounted() {
+    },
+    mounted() {
       GetAllCategory().then(d=>{
-        this.form.options = d.data;
+        this.config.options = d.data;
       });
+
+      const editor = new wangEditor(`#Content`)
+      
+      // 创建编辑器
+      editor.create()
+      this.config.editor = editor
+
+      GoodsAll().then(d=>{
+        console.log(d);
+      });
+    },
+    beforeDestroy() {
+      // 调用销毁 API 对当前编辑器实例进行销毁
+      this.config.editor.destroy()
+      this.config.editor = null
     },
   }
 </script>
