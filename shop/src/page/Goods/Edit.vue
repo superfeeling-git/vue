@@ -4,7 +4,7 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="180px">
                 <el-form-item label="商品分类">
                     <el-cascader
-                        :value="form.categoryPath"
+                        :value="form.categoryId"
                         :options="config.options"
                         placeholder="做为一级分类"
                         @change="handleChange">
@@ -32,7 +32,9 @@
                   </el-upload>
                 </el-form-item>
                 <el-form-item label="商品介绍">
-                  <div id="Content"></div>
+                  <div id="Content">
+                      
+                  </div>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="onSubmit('form')">立即创建</el-button>
@@ -42,6 +44,7 @@
         </el-col>
     </div>
 </template>
+
 
 <style scoped>
 .el-cascader{display: block;}
@@ -76,7 +79,7 @@
 
 <script>
 import baseUrl from '../../util/evns'
-import {GetAllCategory,GoodsCreate} from '../../util/apis'
+import {GetAllCategory,GoodsGet,GoodsUpdate} from '../../util/apis'
 import wangEditor from 'wangeditor'
 
   export default {
@@ -92,8 +95,8 @@ import wangEditor from 'wangeditor'
           Content:""
         },
         config:{
-          imageUrl:"",
           categoryPath:[],
+          imageUrl:"",
           options: [],
           actions:`${baseUrl.baseUrl}Goods/UploadFile`,
           editor: null
@@ -106,18 +109,23 @@ import wangEditor from 'wangeditor'
         }
       }
     },
+    props:['myProp'],
     methods: { 
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.form.Content=this.config.editor.txt.html();
-            GoodsCreate(this.form).then(d=>{
+            GoodsUpdate(this.form).then(d=>{
               if(d.data >= 1){
                 this.$refs[formName].resetFields();
                 this.$message({
-                  message: '添加商品成功',
-                  type: 'success'
+                  message: '更新商品成功',
+                  type: 'success',
+                  onClose:o=>{
+                      this.$emit('customerClick',this.$parent.name,"GoodsList")
+                  }
                 });
+                
               }
             });
           } else {
@@ -162,6 +170,17 @@ import wangEditor from 'wangeditor'
       // 创建编辑器
       editor.create()
       this.config.editor = editor
+
+      let goodsid = this.myProp.goodsId;
+
+      console.log(goodsid);
+
+      GoodsGet({id:goodsid}).then(d=>{
+          this.form = d.data;
+          this.form.categoryPath = d.data.categoryPath;
+          this.config.imageUrl = `${baseUrl.baseUrl.replace("api/","")}${d.data.goodsPic}`;
+          editor.txt.html(d.data.content)
+      });
     },
     beforeDestroy() {
       // 调用销毁 API 对当前编辑器实例进行销毁
@@ -170,3 +189,6 @@ import wangEditor from 'wangeditor'
     },
   }
 </script>
+
+
+

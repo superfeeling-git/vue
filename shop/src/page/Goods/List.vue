@@ -14,12 +14,20 @@
             </el-form-item>           
             <el-form-item>
                 <el-button type="primary" @click="onSubmit">查询</el-button>
+                <el-button type="primary" @click="BatchDelete">删除</el-button>
             </el-form-item>
         </el-form>
           <el-table
             :data="tableData"
+            ref="multipleTable"
+            tooltip-effect="dark"
+            @selection-change="handleSelectionChange"
             stripe
             style="width: 100%">
+            <el-table-column
+            type="selection"
+            width="55">
+            </el-table-column>
             <el-table-column
             label="商品ID"
             width="180">
@@ -75,7 +83,7 @@
 </template>
 
 <script>
-import {GoodsPage,GetAllCategory} from '../../util/apis'
+import {GoodsPage,GetAllCategory,GoodsDelete,GoodsBatchDelete} from '../../util/apis'
 export default {
     data() {
         return {
@@ -86,10 +94,37 @@ export default {
                 goodsName: '',
                 categoryId: null
             },
+            selectData:[],
             options: []
         }
     },
     methods: {
+        BatchDelete(){
+            this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {                
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!',
+                    onClose:o=>{
+                        var id = this.selectData.map((v,i,arr)=>v.goodsId);
+                        this.tableData = this.tableData.filter((v,index) => !id.includes(v.goodsId));
+                        
+                        GoodsBatchDelete({id:id});
+                    }
+                });
+            }).catch(() => {
+            this.$message({
+                type: 'info',
+                message: '已取消删除'
+            });
+            });            
+        },
+        handleSelectionChange(val) {
+            this.selectData = val;
+        },
         changePage(page){
             this.formInline.pageIndex = page;
             GoodsPage(this.formInline).then(d=>{
@@ -111,11 +146,14 @@ export default {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
-            }).then(() => {
-                this.tableData = this.tableData.filter((v,index) => index != i );
+            }).then(() => {                
                 this.$message({
                     type: 'success',
-                    message: '删除成功!'
+                    message: '删除成功!',
+                    onClose:o=>{
+                        this.tableData = this.tableData.filter((v,index) => index != i );
+                        GoodsDelete({id:d.goodsId});
+                    }
                 });
             }).catch(() => {
             this.$message({
@@ -127,7 +165,7 @@ export default {
         handleEdit(i,d){
             let com = this.$parent;
             //向父组件传值
-            this.$emit('customerClick',com.name,d)
+            this.$emit('customerClick',com.name,"GoodsEdit",d)
         }
     },
     mounted() {

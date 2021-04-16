@@ -46,7 +46,7 @@
                         :name="item.name"
                     >
                     <!--customerClick自定义事件接收子组件事件，并执行test方法-->
-                    <component :is="item.content" :key="new Date().getTime()" @customerClick="test"></component>
+                    <component :is="item.content" :key="new Date().getTime()" :myProp="obj" @customerClick="test"></component>
                     </el-tab-pane>
                     </el-tabs>                    
                 </el-main>
@@ -110,6 +110,7 @@
 import Default from './Default'
 import GoodsCreate from './Goods/Create'
 import GoodsList from './Goods/List'
+import GoodsEdit from './Goods/Edit'
 import AdminCreate from './Admin/Create'
 import AdminList from './Admin/List'
 import RoleCreate from './Role/Create'
@@ -186,6 +187,7 @@ export default {
                 ]
             }
             ],
+            obj:null,
             editableTabsValue: '0',
             editableTabs: [{
                 title: '默认首页',
@@ -196,12 +198,14 @@ export default {
         }
     },
     components:{
-        Default,GoodsCreate,GoodsList,AdminCreate,AdminList,RoleCreate,RoleList
+        Default,GoodsCreate,GoodsList,GoodsEdit,
+        AdminCreate,AdminList,RoleCreate,RoleList
     },
     methods: {
-        test(name,rowData){
+        test(name,moduleName,rowData={}){
             let index = this.editableTabs.findIndex(v=>v.name==name);
-            this.editableTabs[index].content = GoodsCreate;
+            this.editableTabs[index].content = moduleName;
+            this.obj = rowData;
         },
         handleOpen(key, keyPath) {
             console.log(key, keyPath);

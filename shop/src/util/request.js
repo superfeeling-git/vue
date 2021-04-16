@@ -74,7 +74,7 @@ export default async(url = '', data = {}, params = {}, type = 'GET') => {
     return await instance.request({
         params:params,
         url:url,
-        data:{pageindex:2},
+        data:data,
         method:type
     });
 }
