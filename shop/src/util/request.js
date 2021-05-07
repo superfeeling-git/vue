@@ -49,6 +49,8 @@ export default async(url = '', data = {}, params = {}, type = 'GET') => {
                         
                         // 获取当前失败的请求
                         const config = error.response.config
+
+                        console.log(config);
         
                         // 重置一下配置
                         config.headers['Authorization'] = "bearer " + token

@@ -10,7 +10,7 @@
  let routerMode = 'hash';
  let baseImgPath;
 
- 
+
  if (process.env.NODE_ENV == 'development') {
      baseUrl = 'http://api.a.com:63846/api/';
      baseImgPath = '/img/';
